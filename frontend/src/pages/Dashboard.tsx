@@ -1,6 +1,21 @@
 import Sidebar from '../components/Sidebar'
 
-const projects = [
+type ProjectStatus =
+  | 'Pending'
+  | 'Confirmed'
+  | 'Shooting'
+  | 'Editing'
+  | 'Delivered'
+  | 'Cancelled'
+
+interface Project {
+  client: string
+  project: string
+  date: string
+  status: ProjectStatus
+}
+
+const projects: Project[] = [
   {
     client: 'Anna Müller',
     project: 'Wedding Photography',
@@ -58,58 +73,66 @@ function Dashboard() {
             description="This month"
           />
         </div>
-      </main>
-      <section className="mt-10">
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <p className="text-sm text-neutral-500">
-              Projects
-            </p>
 
-            <h2 className="mt-1 text-2xl font-semibold">
-              Upcoming Projects
-            </h2>
-          </div>
+        <div className="mt-10 grid gap-6 xl:grid-cols-[2fr_1fr]">
+          <section>
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <p className="text-sm text-neutral-500">
+                  Projects
+                </p>
 
-          <button className="text-sm text-orange-500 hover:text-orange-400">
-            View all
-          </button>
-        </div>
+                <h2 className="mt-1 text-2xl font-semibold">
+                  Upcoming Projects
+                </h2>
+              </div>
 
-        <div className="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900">
-          <div className="grid grid-cols-4 border-b border-neutral-800 px-6 py-4 text-sm text-neutral-500">
-            <p>Client</p>
-            <p>Project</p>
-            <p>Date</p>
-            <p>Status</p>
-          </div>
-
-          {projects.map((project) => (
-            <div
-              key={`${project.client}-${project.date}`}
-              className="grid grid-cols-4 border-b border-neutral-800 px-6 py-5 last:border-b-0"
-            >
-              <p className="font-medium">
-                {project.client}
-              </p>
-
-              <p className="text-neutral-300">
-                {project.project}
-              </p>
-
-              <p className="text-neutral-400">
-                {project.date}
-              </p>
-
-              <p className="text-neutral-300">
-                {project.status}
-              </p>
+              <button className="text-sm text-orange-500 hover:text-orange-400">
+                View all
+              </button>
             </div>
-          ))}
-        </div>
-      </section>
-    </div>
 
+            <div className="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900">
+              <div className="grid grid-cols-4 border-b border-neutral-800 px-6 py-4 text-sm text-neutral-500">
+                <p>Client</p>
+                <p>Project</p>
+                <p>Date</p>
+                <p>Status</p>
+              </div>
+
+              {projects.map((project) => (
+                <div
+                  key={`${project.client}-${project.date}`}
+                  className="grid grid-cols-4 items-center border-b border-neutral-800 px-6 py-5 last:border-b-0"
+                >
+                  <p className="font-medium">
+                    {project.client}
+                  </p>
+
+                  <p className="text-neutral-300">
+                    {project.project}
+                  </p>
+
+                  <p className="text-neutral-400">
+                    {project.date}
+                  </p>
+
+                  <div>
+                    <StatusBadge status={project.status} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <aside className="space-y-6">
+            <NextShoot />
+
+            <RecentClients />
+          </aside>
+        </div>
+      </main>
+    </div>
   )
 }
 
@@ -141,6 +164,139 @@ function StatCard({
   )
 }
 
+function NextShoot() {
+  return (
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <p className="text-sm text-neutral-500">
+        Next Shoot
+      </p>
+
+      <h2 className="mt-2 text-xl font-semibold">
+        Wedding Photography
+      </h2>
+
+      <p className="mt-1 text-neutral-400">
+        Anna Müller
+      </p>
+
+      <div className="mt-6 space-y-3 text-sm">
+        <div className="flex justify-between">
+          <span className="text-neutral-500">
+            Date
+          </span>
+
+          <span>
+            14 Oct
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-neutral-500">
+            Time
+          </span>
+
+          <span>
+            14:00
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-neutral-500">
+            Location
+          </span>
+
+          <span>
+            Vienna
+          </span>
+        </div>
+      </div>
+
+      <button className="mt-6 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-medium hover:bg-orange-400">
+        View Project
+      </button>
+    </div>
+  )
+}
+
+const recentClients = [
+  {
+    name: 'Anna Müller',
+    project: 'Wedding Photography',
+  },
+  {
+    name: 'Max Berger',
+    project: 'Portrait Shooting',
+  },
+  {
+    name: 'Lisa Weber',
+    project: 'Event Video',
+  },
+]
+
+function RecentClients() {
+  return (
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <div className="mb-5 flex items-center justify-between">
+        <div>
+          <p className="text-sm text-neutral-500">
+            Clients
+          </p>
+
+          <h2 className="mt-1 text-xl font-semibold">
+            Recent Clients
+          </h2>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {recentClients.map((client) => (
+          <div
+            key={client.name}
+            className="flex items-center gap-3"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 font-medium">
+              {client.name.charAt(0)}
+            </div>
+
+            <div>
+              <p className="text-sm font-medium">
+                {client.name}
+              </p>
+
+              <p className="text-xs text-neutral-500">
+                {client.project}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+
+interface StatusBadgeProps {
+  status: ProjectStatus
+}
+
+function StatusBadge({ status }: StatusBadgeProps) {
+  const statusStyles: Record<ProjectStatus, string> = {
+    Pending: 'bg-yellow-500/10 text-yellow-400',
+    Confirmed: 'bg-green-500/10 text-green-400',
+    Shooting: 'bg-purple-500/10 text-purple-400',
+    Editing: 'bg-blue-500/10 text-blue-400',
+    Delivered: 'bg-emerald-500/10 text-emerald-400',
+    Cancelled: 'bg-red-500/10 text-red-400',
+  }
+
+  return (
+    <span
+      className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
+    >
+      {status}
+    </span>
+  )
+}
 
 
 export default Dashboard
